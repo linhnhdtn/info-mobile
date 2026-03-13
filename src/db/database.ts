@@ -9,44 +9,72 @@ export function generateId(): string {
 
 // SQLite connection (only used on native)
 let _sqliteDb: import('@capacitor-community/sqlite').SQLiteDBConnection | null = null
+let _initPromise: Promise<import('@capacitor-community/sqlite').SQLiteDBConnection> | null = null
 
 export async function getSqliteDb() {
   if (_sqliteDb) return _sqliteDb
 
+  // Prevent concurrent initialization - all callers wait on the same promise
+  if (_initPromise) return _initPromise
+
+  _initPromise = _initSqlite()
+  try {
+    _sqliteDb = await _initPromise
+    return _sqliteDb
+  } catch (e) {
+    _initPromise = null
+    throw e
+  }
+}
+
+async function _initSqlite() {
   const { CapacitorSQLite, SQLiteConnection } = await import('@capacitor-community/sqlite')
   const { SCHEMA_SQL } = await import('./schema.sql')
 
   const sqlite = new SQLiteConnection(CapacitorSQLite)
 
-  const ret = await sqlite.checkConnectionsConsistency()
-  const isConn = (await sqlite.isConnection('info_app', false)).result
+  let db: import('@capacitor-community/sqlite').SQLiteDBConnection
 
-  if (ret.result && isConn) {
-    _sqliteDb = await sqlite.retrieveConnection('info_app', false)
-  } else {
-    _sqliteDb = await sqlite.createConnection('info_app', false, 'no-encryption', 1, false)
+  try {
+    const ret = await sqlite.checkConnectionsConsistency()
+    const isConn = (await sqlite.isConnection('info_app', false)).result
+
+    if (ret.result && isConn) {
+      db = await sqlite.retrieveConnection('info_app', false)
+    } else {
+      db = await sqlite.createConnection('info_app', false, 'no-encryption', 1, false)
+    }
+  } catch {
+    // If createConnection fails (e.g. "already exists"), try to retrieve it
+    try {
+      db = await sqlite.retrieveConnection('info_app', false)
+    } catch {
+      // Last resort: close all and recreate
+      await sqlite.closeAllConnections()
+      db = await sqlite.createConnection('info_app', false, 'no-encryption', 1, false)
+    }
   }
 
-  await _sqliteDb.open()
-  await _sqliteDb.execute(SCHEMA_SQL)
+  await db.open()
+  await db.execute(SCHEMA_SQL)
 
   // Seed default user
-  const res = await _sqliteDb.query("SELECT id FROM users LIMIT 1")
+  const res = await db.query("SELECT id FROM users LIMIT 1")
   if (!res.values || res.values.length === 0) {
     const now = new Date().toISOString()
-    await _sqliteDb.run(
+    await db.run(
       "INSERT INTO users (id, username, name, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
       ['default-user', 'admin', 'Admin', now, now]
     )
-    await _sqliteDb.run(
+    await db.run(
       "INSERT INTO profiles (id, user_id, created_at, updated_at) VALUES (?, ?, ?, ?)",
       ['default-profile', 'default-user', now, now]
     )
-    await _sqliteDb.run(
+    await db.run(
       "INSERT INTO works (id, user_id, created_at, updated_at) VALUES (?, ?, ?, ?)",
       ['default-work', 'default-user', now, now]
     )
   }
 
-  return _sqliteDb
+  return db
 }

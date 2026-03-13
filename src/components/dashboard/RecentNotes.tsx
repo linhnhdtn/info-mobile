@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Badge } from "@/components/ui/badge"
 import { Link } from "react-router-dom"
 import { noteRepo } from "@/db/repositories/note-repo"
+import { useAppResume } from "@/lib/useAppResume"
 import type { Note } from "@/types"
 
 export function RecentNotes() {
   const [notes, setNotes] = useState<Note[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
+  const loadNotes = useCallback(() => {
     noteRepo.getAll()
       .then((data) => {
         setNotes(data.slice(0, 4))
@@ -18,6 +19,9 @@ export function RecentNotes() {
       })
       .catch(() => setLoading(false))
   }, [])
+
+  useEffect(() => { loadNotes() }, [loadNotes])
+  useAppResume(loadNotes)
 
   return (
     <Card>

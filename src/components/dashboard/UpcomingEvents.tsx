@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { CalendarDays, MapPin } from "lucide-react"
 import { Link } from "react-router-dom"
 import { eventRepo } from "@/db/repositories/event-repo"
+import { useAppResume } from "@/lib/useAppResume"
 import type { CalendarEvent } from "@/types"
 
 export function UpcomingEvents() {
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
+  const loadEvents = useCallback(() => {
     const start = new Date().toISOString()
     const end = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
     eventRepo.getByDateRange(start, end)
@@ -20,6 +21,9 @@ export function UpcomingEvents() {
       })
       .catch(() => setLoading(false))
   }, [])
+
+  useEffect(() => { loadEvents() }, [loadEvents])
+  useAppResume(loadEvents)
 
   return (
     <Card>

@@ -7,8 +7,10 @@ import { BudgetSetupForm } from "@/components/expenses/BudgetSetupForm"
 import { ExpenseQuickAdd } from "@/components/expenses/ExpenseQuickAdd"
 import { ExpenseList } from "@/components/expenses/ExpenseList"
 import { MonthStats } from "@/components/expenses/MonthStats"
+import { ExpenseCharts } from "@/components/expenses/ExpenseCharts"
 import { budgetRepo } from "@/db/repositories/budget-repo"
 import { expenseRepo } from "@/db/repositories/expense-repo"
+import { useAppResume } from "@/lib/useAppResume"
 import type { Budget, Expense } from "@/types"
 
 function getMonthKey(date: Date) {
@@ -66,6 +68,8 @@ export default function ExpensesPage() {
   useEffect(() => {
     fetchData()
   }, [fetchData])
+
+  useAppResume(fetchData)
 
   function prevMonth() {
     const m = monthKey % 100
@@ -182,6 +186,8 @@ export default function ExpensesPage() {
       )}
 
       <MonthStats expenses={monthExpenses} />
+
+      <ExpenseCharts expenses={monthExpenses} budget={budget} monthKey={monthKey} />
     </div>
   )
 }

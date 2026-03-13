@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Link } from "react-router-dom"
 import { budgetRepo } from "@/db/repositories/budget-repo"
 import { expenseRepo } from "@/db/repositories/expense-repo"
+import { useAppResume } from "@/lib/useAppResume"
 import type { Budget, Expense } from "@/types"
 
 function formatVND(n: number) {
@@ -30,7 +31,7 @@ export function ExpenseSummary() {
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
+  const loadData = useCallback(() => {
     const today = new Date()
     const monthKey = today.getFullYear() * 100 + (today.getMonth() + 1)
 
@@ -45,6 +46,9 @@ export function ExpenseSummary() {
       })
       .catch(() => setLoading(false))
   }, [])
+
+  useEffect(() => { loadData() }, [loadData])
+  useAppResume(loadData)
 
   if (loading) {
     return (

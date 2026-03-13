@@ -6,6 +6,7 @@ import { NoteEditor } from "@/components/notes/NoteEditor"
 import { NoteFilters } from "@/components/notes/NoteFilters"
 import { Skeleton } from "@/components/ui/skeleton"
 import { noteRepo } from "@/db/repositories/note-repo"
+import { useAppResume } from "@/lib/useAppResume"
 import type { Note } from "@/types"
 import { toast } from "sonner"
 
@@ -26,6 +27,8 @@ export default function NotesPage() {
   useEffect(() => {
     loadNotes()
   }, [search, selectedTag])
+
+  useAppResume(loadNotes)
 
   const allTags = useMemo(() => {
     const tagSet = new Set<string>()
