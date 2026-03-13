@@ -23,21 +23,24 @@ export function Topbar() {
   const initials = displayName.slice(0, 2).toUpperCase()
 
   return (
-    <header className="h-14 border-b bg-white flex items-center justify-between px-4 md:px-6">
-      <div className="flex items-center gap-1">
-        <MobileNav />
-        {!isHome && (
-          <Button variant="ghost" size="icon" className="h-12 w-12" onClick={() => navigate(-1)}>
-            <ChevronLeft className="h-8 w-8" />
-          </Button>
-        )}
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-medium hidden sm:block">{displayName}</span>
-        <Avatar className="h-8 w-8">
-          {profile?.avatarUrl && <AvatarImage src={profile.avatarUrl} alt={displayName} />}
-          <AvatarFallback className="text-xs">{initials}</AvatarFallback>
-        </Avatar>
+    <header className="border-b bg-white">
+      <div className="h-[env(safe-area-inset-top)]" />
+      <div className="h-12 flex items-center justify-between px-4 md:px-6">
+        <div className="flex items-center gap-1">
+          <MobileNav />
+          {!isHome && (
+            <Button variant="ghost" size="icon" className="h-10 w-10" onClick={() => navigate(-1)}>
+              <ChevronLeft className="h-6 w-6" />
+            </Button>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium hidden sm:block">{displayName}</span>
+          <Avatar className="h-8 w-8">
+            {profile?.avatarUrl && <AvatarImage src={profile.avatarUrl} alt={displayName} />}
+            <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+          </Avatar>
+        </div>
       </div>
     </header>
   )

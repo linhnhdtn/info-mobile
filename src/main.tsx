@@ -8,9 +8,8 @@ import App from './App'
 import './globals.css'
 
 if (Capacitor.isNativePlatform()) {
-  StatusBar.setOverlaysWebView({ overlay: false })
-  StatusBar.setStyle({ style: Style.Light })
-  StatusBar.setBackgroundColor({ color: '#ffffff' })
+  StatusBar.setOverlaysWebView({ overlay: true })
+  StatusBar.setStyle({ style: Style.Dark })
 }
 
 createRoot(document.getElementById('root')!).render(

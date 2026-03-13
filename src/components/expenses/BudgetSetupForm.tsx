@@ -1,7 +1,12 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { toast } from "sonner"
 import { budgetRepo } from "@/db/repositories/budget-repo"
 
@@ -12,6 +17,8 @@ interface BudgetSetupFormProps {
     totalBudget: number
     dailyAllowances: number[]
   } | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
   onSaved: () => void
 }
 
@@ -19,7 +26,7 @@ function formatVND(n: number) {
   return n.toLocaleString("vi-VN") + "đ"
 }
 
-export function BudgetSetupForm({ month, daysInMonth, existingBudget, onSaved }: BudgetSetupFormProps) {
+export function BudgetSetupForm({ month, daysInMonth, existingBudget, open, onOpenChange, onSaved }: BudgetSetupFormProps) {
   const [totalBudget, setTotalBudget] = useState(existingBudget?.totalBudget?.toString() || "")
   const [mode, setMode] = useState<"even" | "custom">("even")
   const [dailyAllowances, setDailyAllowances] = useState<number[]>(
@@ -77,71 +84,73 @@ export function BudgetSetupForm({ month, daysInMonth, existingBudget, onSaved }:
   const m = month % 100
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-semibold">
-          {existingBudget ? "Chỉnh sửa ngân sách" : "Thiết lập ngân sách"} tháng {m}/{year}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex gap-2 items-end">
-          <div className="flex-1">
-            <label className="text-xs text-muted-foreground mb-1 block">Tổng ngân sách (VNĐ)</label>
-            <Input
-              type="number"
-              placeholder="vd: 10000000"
-              value={totalBudget}
-              onChange={(e) => setTotalBudget(e.target.value)}
-            />
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-sm font-semibold">
+            {existingBudget ? "Chỉnh sửa ngân sách" : "Thiết lập ngân sách"} tháng {m}/{year}
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="flex gap-2 items-end">
+            <div className="flex-1">
+              <label className="text-xs text-muted-foreground mb-1 block">Tổng ngân sách (VNĐ)</label>
+              <Input
+                type="number"
+                placeholder="vd: 10000000"
+                value={totalBudget}
+                onChange={(e) => setTotalBudget(e.target.value)}
+              />
+            </div>
+            {total > 0 && (
+              <p className="text-xs text-muted-foreground pb-2 whitespace-nowrap">
+                ≈ {formatVND(evenDaily)}/ngày
+              </p>
+            )}
           </div>
-          {total > 0 && (
-            <p className="text-xs text-muted-foreground pb-2 whitespace-nowrap">
-              ≈ {formatVND(evenDaily)}/ngày
-            </p>
+
+          <div className="flex gap-2">
+            <Button
+              variant={mode === "even" ? "default" : "outline"}
+              size="sm"
+              onClick={() => { setMode("even"); setShowCustom(false) }}
+            >
+              Chia đều
+            </Button>
+            <Button
+              variant={mode === "custom" ? "default" : "outline"}
+              size="sm"
+              onClick={() => {
+                setMode("custom")
+                if (dailyAllowances.every(v => v === 0)) distributeEvenly()
+                setShowCustom(true)
+              }}
+            >
+              Tùy chỉnh
+            </Button>
+          </div>
+
+          {showCustom && mode === "custom" && (
+            <div className="grid grid-cols-7 gap-1.5 max-h-48 overflow-y-auto">
+              {dailyAllowances.map((val, i) => (
+                <div key={i} className="text-center">
+                  <label className="text-xs text-muted-foreground">{i + 1}</label>
+                  <Input
+                    type="number"
+                    className="h-8 text-xs px-1 text-center"
+                    value={val || ""}
+                    onChange={(e) => handleDayChange(i, e.target.value)}
+                  />
+                </div>
+              ))}
+            </div>
           )}
-        </div>
 
-        <div className="flex gap-2">
-          <Button
-            variant={mode === "even" ? "default" : "outline"}
-            size="sm"
-            onClick={() => { setMode("even"); setShowCustom(false) }}
-          >
-            Chia đều
-          </Button>
-          <Button
-            variant={mode === "custom" ? "default" : "outline"}
-            size="sm"
-            onClick={() => {
-              setMode("custom")
-              if (dailyAllowances.every(v => v === 0)) distributeEvenly()
-              setShowCustom(true)
-            }}
-          >
-            Tùy chỉnh
+          <Button onClick={handleSave} disabled={saving} className="w-full">
+            {saving ? "Đang lưu..." : "Lưu ngân sách"}
           </Button>
         </div>
-
-        {showCustom && mode === "custom" && (
-          <div className="grid grid-cols-7 gap-1.5 max-h-48 overflow-y-auto">
-            {dailyAllowances.map((val, i) => (
-              <div key={i} className="text-center">
-                <label className="text-xs text-muted-foreground">{i + 1}</label>
-                <Input
-                  type="number"
-                  className="h-8 text-xs px-1 text-center"
-                  value={val || ""}
-                  onChange={(e) => handleDayChange(i, e.target.value)}
-                />
-              </div>
-            ))}
-          </div>
-        )}
-
-        <Button onClick={handleSave} disabled={saving} className="w-full">
-          {saving ? "Đang lưu..." : "Lưu ngân sách"}
-        </Button>
-      </CardContent>
-    </Card>
+      </DialogContent>
+    </Dialog>
   )
 }

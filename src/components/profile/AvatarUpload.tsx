@@ -42,6 +42,7 @@ export function AvatarUpload({ currentUrl, displayName = "U", onUploaded }: Avat
           path: `avatars/${fileName}`,
           data: base64,
           directory: Directory.Data,
+          recursive: true,
         })
         const fileUri = await Filesystem.getUri({
           path: `avatars/${fileName}`,

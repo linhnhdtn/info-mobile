@@ -157,16 +157,16 @@ export default function ExpensesPage() {
         </div>
       )}
 
-      {(showSetup || (budget && showSetup)) && (
-        <BudgetSetupForm
-          month={monthKey}
-          daysInMonth={daysInMonth}
-          existingBudget={budget}
-          onSaved={() => { setShowSetup(false); fetchData() }}
-        />
-      )}
+      <BudgetSetupForm
+        month={monthKey}
+        daysInMonth={daysInMonth}
+        existingBudget={budget}
+        open={showSetup}
+        onOpenChange={setShowSetup}
+        onSaved={() => { setShowSetup(false); fetchData() }}
+      />
 
-      {budget && !showSetup && (
+      {budget && (
         <Button variant="outline" size="sm" onClick={() => setShowSetup(true)}>
           Chỉnh sửa ngân sách
         </Button>
