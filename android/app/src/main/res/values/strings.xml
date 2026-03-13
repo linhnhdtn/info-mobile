@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Cá nhân</string>
+    <string name="title_activity_main">Cá nhân</string>
+    <string name="package_name">com.canhan.info</string>
+    <string name="custom_url_scheme">com.canhan.info</string>
+</resources>
