@@ -56,7 +56,7 @@ export function MobileNav() {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="md:hidden">
-          <Menu className="h-5 w-5" />
+          <Menu className="h-7 w-7" />
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="w-56 p-0">
@@ -75,13 +75,13 @@ export function MobileNav() {
                   <button
                     onClick={() => setExpanded(isExpanded ? null : item.href)}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors w-full",
+                      "flex items-center gap-3 px-3 py-2.5 rounded-md text-base font-medium transition-colors w-full",
                       isActive
                         ? "bg-gray-100 text-gray-900"
                         : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                     )}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-5 w-5" />
                     <span className="flex-1 text-left">{item.label}</span>
                     <ChevronDown
                       className={cn(
@@ -100,7 +100,7 @@ export function MobileNav() {
                             to={child.href}
                             onClick={() => setOpen(false)}
                             className={cn(
-                              "block px-3 py-1.5 rounded-md text-sm transition-colors",
+                              "block px-3 py-2 rounded-md text-base transition-colors",
                               childActive
                                 ? "text-gray-900 font-medium bg-gray-50"
                                 : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
@@ -122,13 +122,13 @@ export function MobileNav() {
                 to={item.href}
                 onClick={() => setOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                  "flex items-center gap-3 px-3 py-2.5 rounded-md text-base font-medium transition-colors",
                   isActive
                     ? "bg-gray-100 text-gray-900"
                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 )}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-5 w-5" />
                 {item.label}
               </Link>
             )

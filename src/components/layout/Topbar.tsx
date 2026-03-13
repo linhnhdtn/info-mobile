@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react"
+import { useNavigate, useLocation } from "react-router-dom"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { ChevronLeft } from "lucide-react"
 import { MobileNav } from "./MobileNav"
 import { profileRepo } from "@/db/repositories/profile-repo"
 import type { UserProfile } from "@/types"
 
 export function Topbar() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const isHome = pathname === "/dashboard"
 
   useEffect(() => {
     profileRepo.get().then(setProfile).catch(() => {})
@@ -18,8 +24,14 @@ export function Topbar() {
 
   return (
     <header className="h-14 border-b bg-white flex items-center justify-between px-4 md:px-6">
-      <MobileNav />
-      <div className="hidden md:block" />
+      <div className="flex items-center gap-1">
+        <MobileNav />
+        {!isHome && (
+          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+        )}
+      </div>
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium hidden sm:block">{displayName}</span>
         <Avatar className="h-8 w-8">
