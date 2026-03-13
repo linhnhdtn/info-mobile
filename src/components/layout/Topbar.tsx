@@ -27,8 +27,8 @@ export function Topbar() {
       <div className="flex items-center gap-1">
         <MobileNav />
         {!isHome && (
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-            <ChevronLeft className="h-6 w-6" />
+          <Button variant="ghost" size="icon" className="h-12 w-12" onClick={() => navigate(-1)}>
+            <ChevronLeft className="h-8 w-8" />
           </Button>
         )}
       </div>
