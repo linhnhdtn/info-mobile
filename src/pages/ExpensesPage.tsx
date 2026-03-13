@@ -91,18 +91,13 @@ export default function ExpensesPage() {
   const todaySpent = todayExpenses.reduce((s, e) => s + e.amount, 0)
 
   let todayAllowance = 0
+  let monthRemaining = 0
   if (budget && isCurrentMonth) {
     const allowances = budget.dailyAllowances as number[]
-    let cumulativeAllowance = 0
-    for (let i = 0; i <= todayIndex; i++) {
-      cumulativeAllowance += allowances[i] || 0
-    }
-    const beforeTodayExpenses = monthExpenses.filter((e) => {
-      const d = new Date(e.date)
-      return getDateString(d) < todayStr
-    })
-    const cumulativeSpent = beforeTodayExpenses.reduce((s, e) => s + e.amount, 0)
-    todayAllowance = cumulativeAllowance - cumulativeSpent
+    // Ngân sách chỉ của ngày hôm nay
+    todayAllowance = allowances[todayIndex] || 0
+    // Còn lại trong tháng = ngân sách tháng - tổng đã chi
+    monthRemaining = budget.totalBudget - monthSpent
   }
 
   if (loading) {

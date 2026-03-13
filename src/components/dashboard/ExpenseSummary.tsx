@@ -2,9 +2,11 @@ import { useEffect, useState, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Link } from "react-router-dom"
+import { AlertTriangle } from "lucide-react"
 import { budgetRepo } from "@/db/repositories/budget-repo"
 import { expenseRepo } from "@/db/repositories/expense-repo"
 import { useAppResume } from "@/lib/useAppResume"
+import { EXPENSE_CATEGORIES } from "@/types"
 import type { Budget, Expense } from "@/types"
 
 function formatVND(n: number) {
@@ -65,9 +67,16 @@ export function ExpenseSummary() {
 
   const today = new Date()
   const todayStr = getDateString(today)
+  const todayIndex = today.getDate() - 1
   const monthSpent = expenses.reduce((s, e) => s + e.amount, 0)
   const todayExpenses = expenses.filter((e) => getDateString(new Date(e.date)) === todayStr)
   const todaySpent = todayExpenses.reduce((s, e) => s + e.amount, 0)
+
+  // Ngân sách chỉ của ngày hôm nay
+  const todayAllowance = budget
+    ? (budget.dailyAllowances as number[])[todayIndex] || 0
+    : 0
+  const isOverDaily = budget && todayAllowance > 0 && todaySpent > todayAllowance
 
   return (
     <Card>
@@ -96,15 +105,31 @@ export function ExpenseSummary() {
             </div>
             <div className="space-y-1">
               <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">Hôm nay</span>
-                <span>{formatVND(todaySpent)}</span>
+                <span className="text-muted-foreground">Ngày</span>
+                <span className={isOverDaily ? "text-red-600 font-semibold" : ""}>
+                  {formatVND(todaySpent)} / {formatVND(todayAllowance)}
+                </span>
+              </div>
+              <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full ${todayAllowance > 0 ? getColorClass(todayAllowance - todaySpent, todayAllowance) : "bg-gray-200"}`}
+                  style={{ width: `${todayAllowance > 0 ? Math.min((todaySpent / todayAllowance) * 100, 100) : 0}%` }}
+                />
               </div>
             </div>
+            {isOverDaily && (
+              <div className="flex items-center gap-2 p-2 bg-red-50 border border-red-200 rounded-md">
+                <AlertTriangle className="h-4 w-4 text-red-500 shrink-0" />
+                <p className="text-xs text-red-700">
+                  Chi tiêu quá mức! Vượt <strong>{formatVND(todaySpent - todayAllowance)}</strong> so với ngân sách ngày.
+                </p>
+              </div>
+            )}
             {todayExpenses.length > 0 && (
               <div className="space-y-1">
                 {todayExpenses.slice(0, 3).map((e) => (
                   <div key={e.id} className="flex justify-between text-xs text-muted-foreground">
-                    <span className="truncate">{e.description || e.category}</span>
+                    <span className="truncate">{e.description || EXPENSE_CATEGORIES.find((c) => c.value === e.category)?.label || e.category}</span>
                     <span>{formatVND(e.amount)}</span>
                   </div>
                 ))}
