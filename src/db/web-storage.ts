@@ -11,11 +11,17 @@ interface DbStore {
   notes: Record<string, unknown>[]
   budgets: Record<string, unknown>[]
   expenses: Record<string, unknown>[]
+  gold_holdings: Record<string, unknown>[]
 }
 
 function getStore(): DbStore {
   const raw = localStorage.getItem(STORAGE_KEY)
-  if (raw) return JSON.parse(raw)
+  if (raw) {
+    const parsed = JSON.parse(raw)
+    // Ensure new tables exist in old stores
+    if (!parsed.gold_holdings) parsed.gold_holdings = []
+    return parsed
+  }
   // Seed default data
   const now = new Date().toISOString()
   const store: DbStore = {
@@ -26,6 +32,7 @@ function getStore(): DbStore {
     notes: [],
     budgets: [],
     expenses: [],
+    gold_holdings: [],
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(store))
   return store

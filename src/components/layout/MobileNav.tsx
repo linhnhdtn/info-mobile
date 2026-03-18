@@ -8,6 +8,7 @@ import {
   StickyNote,
   CloudSun,
   Wallet,
+  Coins,
   ChevronDown,
   type LucideIcon,
 } from "lucide-react"
@@ -42,6 +43,7 @@ const navItems: NavItem[] = [
       { href: "/expenses/overview", label: "Tổng quan" },
     ],
   },
+  { href: "/gold", label: "Sổ vàng", icon: Coins },
 ]
 
 export function MobileNav() {
