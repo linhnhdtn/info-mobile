@@ -23,7 +23,7 @@ export function Topbar() {
   const initials = displayName.slice(0, 2).toUpperCase()
 
   return (
-    <header className="border-b bg-white">
+    <header className="border-b bg-white/80 backdrop-blur-md">
       <div className="h-[env(safe-area-inset-top)]" />
       <div className="h-12 flex items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-1">
