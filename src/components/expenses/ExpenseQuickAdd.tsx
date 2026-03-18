@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { MoneyInput } from "@/components/ui/money-input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Plus } from "lucide-react"
@@ -53,11 +54,10 @@ export function ExpenseQuickAdd({ date, onAdded }: ExpenseQuickAddProps) {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
-          <Input
-            type="number"
+          <MoneyInput
             placeholder="Số tiền"
             value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={setAmount}
             className="sm:w-36"
           />
           <Input

@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { MoneyInput } from "@/components/ui/money-input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { goldRepo } from "@/db/repositories/gold-repo"
 import type { GoldHolding } from "@/types"
@@ -53,7 +54,7 @@ export function GoldEditForm({ holding, open, onOpenChange, onSaved }: GoldEditF
           </div>
           <div className="space-y-2">
             <Label>Giá mua (VNĐ/chỉ)</Label>
-            <Input type="number" step="1000" value={buyPrice} onChange={(e) => setBuyPrice(e.target.value)} />
+            <MoneyInput value={buyPrice} onChange={setBuyPrice} />
           </div>
           <Button type="submit" className="w-full" disabled={saving}>
             {saving ? "Đang lưu..." : "Cập nhật"}

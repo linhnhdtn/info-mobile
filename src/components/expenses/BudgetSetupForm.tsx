@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { MoneyInput } from "@/components/ui/money-input"
 import {
   Dialog,
   DialogContent,
@@ -95,11 +96,10 @@ export function BudgetSetupForm({ month, daysInMonth, existingBudget, open, onOp
           <div className="flex gap-2 items-end">
             <div className="flex-1">
               <label className="text-xs text-muted-foreground mb-1 block">Tổng ngân sách (VNĐ)</label>
-              <Input
-                type="number"
-                placeholder="vd: 10000000"
+              <MoneyInput
+                placeholder="VD: 10.000.000"
                 value={totalBudget}
-                onChange={(e) => setTotalBudget(e.target.value)}
+                onChange={setTotalBudget}
               />
             </div>
             {total > 0 && (
@@ -135,11 +135,10 @@ export function BudgetSetupForm({ month, daysInMonth, existingBudget, open, onOp
               {dailyAllowances.map((val, i) => (
                 <div key={i} className="text-center">
                   <label className="text-xs text-muted-foreground">{i + 1}</label>
-                  <Input
-                    type="number"
+                  <MoneyInput
                     className="h-8 text-xs px-1 text-center"
-                    value={val || ""}
-                    onChange={(e) => handleDayChange(i, e.target.value)}
+                    value={val ? val.toString() : ""}
+                    onChange={(v) => handleDayChange(i, v)}
                   />
                 </div>
               ))}

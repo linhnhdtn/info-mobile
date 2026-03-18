@@ -3,6 +3,7 @@ import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { MoneyInput } from "@/components/ui/money-input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { goldRepo } from "@/db/repositories/gold-repo"
@@ -82,7 +83,7 @@ export function GoldAddForm({ onAdded }: GoldAddFormProps) {
           </div>
           <div className="space-y-2">
             <Label>Giá mua (VNĐ/chỉ)</Label>
-            <Input type="number" step="1000" placeholder="VD: 8500000" value={buyPrice} onChange={(e) => setBuyPrice(e.target.value)} />
+            <MoneyInput placeholder="VD: 8.500.000" value={buyPrice} onChange={setBuyPrice} />
           </div>
           <Button type="submit" className="w-full" disabled={saving}>
             {saving ? "Đang lưu..." : "Thêm"}

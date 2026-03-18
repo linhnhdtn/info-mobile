@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { MoneyInput } from "@/components/ui/money-input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Trash2, Pencil, Check, X } from "lucide-react"
 import { toast } from "sonner"
@@ -79,10 +80,9 @@ export function ExpenseList({ expenses, onChanged }: ExpenseListProps) {
               <div key={expense.id} className="flex items-center gap-2 p-2 rounded-md border text-sm">
                 {editingId === expense.id ? (
                   <>
-                    <Input
-                      type="number"
+                    <MoneyInput
                       value={editAmount}
-                      onChange={(e) => setEditAmount(e.target.value)}
+                      onChange={setEditAmount}
                       className="h-7 w-28 text-xs"
                     />
                     <Input
