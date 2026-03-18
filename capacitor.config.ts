@@ -13,6 +13,10 @@ const config: CapacitorConfig = {
       iosIsEncryption: false,
       androidIsEncryption: false,
     },
+    LocalNotifications: {
+      smallIcon: 'ic_launcher',
+      iconColor: '#3B82F6',
+    },
   },
 };
 
