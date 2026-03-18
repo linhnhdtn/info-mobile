@@ -101,3 +101,12 @@ export const EXPENSE_CATEGORIES = [
 ] as const
 
 export type ExpenseCategory = (typeof EXPENSE_CATEGORIES)[number]["value"]
+
+export interface GoldHolding {
+  id: string
+  goldType: string
+  goldTypeName: string
+  quantity: number
+  buyPrice: number
+  createdAt: string
+}

@@ -112,4 +112,15 @@ CREATE TABLE IF NOT EXISTS expenses (
 );
 
 CREATE INDEX IF NOT EXISTS idx_expenses_user_date ON expenses(user_id, date);
+
+CREATE TABLE IF NOT EXISTS gold_holdings (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  gold_type TEXT NOT NULL,
+  gold_type_name TEXT NOT NULL,
+  quantity REAL NOT NULL,
+  buy_price REAL NOT NULL,
+  created_at TEXT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 `;
