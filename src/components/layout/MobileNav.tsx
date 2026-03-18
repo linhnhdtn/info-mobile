@@ -6,6 +6,7 @@ import {
   User,
   CalendarDays,
   StickyNote,
+  CloudSun,
   Wallet,
   ChevronDown,
   type LucideIcon,
@@ -30,6 +31,7 @@ const navItems: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/profile", label: "Hồ sơ", icon: User },
   { href: "/schedule", label: "Lịch trình", icon: CalendarDays },
+  { href: "/weather", label: "Thời tiết", icon: CloudSun },
   { href: "/notes", label: "Ghi chú", icon: StickyNote },
   {
     href: "/expenses",

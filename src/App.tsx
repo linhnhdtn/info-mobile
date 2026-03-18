@@ -6,6 +6,7 @@ import NotesPage from './pages/NotesPage'
 import ProfilePage from './pages/ProfilePage'
 import ExpensesPage from './pages/ExpensesPage'
 import ExpensesOverviewPage from './pages/ExpensesOverviewPage'
+import WeatherPage from './pages/WeatherPage'
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <Route element={<AppLayout />}>
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/schedule" element={<SchedulePage />} />
+        <Route path="/weather" element={<WeatherPage />} />
         <Route path="/notes" element={<NotesPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/expenses" element={<ExpensesPage />} />
