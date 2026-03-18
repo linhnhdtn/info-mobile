@@ -14,6 +14,7 @@ import { EVENT_COLORS, type CalendarEvent } from "@/types"
 import { eventRepo } from "@/db/repositories/event-repo"
 import { toast } from "sonner"
 import { Trash2 } from "lucide-react"
+import { scheduleEventReminder, cancelEventReminder } from "@/lib/notifications"
 
 interface EventFormProps {
   event?: Partial<CalendarEvent> & { defaultStart?: string } | null
@@ -85,6 +86,18 @@ export function EventForm({ event, open, onClose, onSaved, onDeleted }: EventFor
       } else {
         saved = await eventRepo.create(body)
       }
+      // Schedule or cancel notification
+      if (saved.reminderAt) {
+        await scheduleEventReminder({
+          eventId: saved.id,
+          title: `Nhắc nhở: ${saved.title}`,
+          body: saved.description || saved.location || 'Bạn có sự kiện sắp tới',
+          at: new Date(saved.reminderAt),
+        })
+      } else {
+        await cancelEventReminder(saved.id)
+      }
+
       onSaved(saved)
       toast.success(isEdit ? "Đã cập nhật sự kiện" : "Đã thêm sự kiện mới")
       onClose()
@@ -101,6 +114,7 @@ export function EventForm({ event, open, onClose, onSaved, onDeleted }: EventFor
     setDeleting(true)
     try {
       await eventRepo.delete(event.id)
+      await cancelEventReminder(event.id)
       onDeleted?.(event.id)
       toast.success("Đã xoá sự kiện")
       onClose()
