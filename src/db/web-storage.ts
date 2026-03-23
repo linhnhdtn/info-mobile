@@ -12,6 +12,8 @@ interface DbStore {
   budgets: Record<string, unknown>[]
   expenses: Record<string, unknown>[]
   gold_holdings: Record<string, unknown>[]
+  health_logs: Record<string, unknown>[]
+  health_photos: Record<string, unknown>[]
 }
 
 function getStore(): DbStore {
@@ -20,6 +22,8 @@ function getStore(): DbStore {
     const parsed = JSON.parse(raw)
     // Ensure new tables exist in old stores
     if (!parsed.gold_holdings) parsed.gold_holdings = []
+    if (!parsed.health_logs) parsed.health_logs = []
+    if (!parsed.health_photos) parsed.health_photos = []
     return parsed
   }
   // Seed default data
@@ -33,6 +37,8 @@ function getStore(): DbStore {
     budgets: [],
     expenses: [],
     gold_holdings: [],
+    health_logs: [],
+    health_photos: [],
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(store))
   return store

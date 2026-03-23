@@ -8,6 +8,7 @@ import {
   CloudSun,
   Wallet,
   Coins,
+  HeartPulse,
   ChevronDown,
   type LucideIcon,
 } from "lucide-react"
@@ -41,6 +42,7 @@ const navItems: NavItem[] = [
     ],
   },
   { href: "/gold", label: "Sổ vàng", icon: Coins },
+  { href: "/health", label: "Sức khỏe", icon: HeartPulse },
 ]
 
 export function Sidebar() {

@@ -123,4 +123,38 @@ CREATE TABLE IF NOT EXISTS gold_holdings (
   created_at TEXT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS health_logs (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  date TEXT NOT NULL,
+  weight REAL,
+  height REAL,
+  blood_pressure_sys INTEGER,
+  blood_pressure_dia INTEGER,
+  heart_rate INTEGER,
+  sleep_hours REAL,
+  water_ml INTEGER,
+  steps INTEGER,
+  exercise_minutes INTEGER,
+  mood TEXT,
+  note TEXT,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  UNIQUE(user_id, date)
+);
+
+CREATE INDEX IF NOT EXISTS idx_health_logs_user_date ON health_logs(user_id, date);
+
+CREATE TABLE IF NOT EXISTS health_photos (
+  id TEXT PRIMARY KEY,
+  health_log_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  file_path TEXT NOT NULL,
+  caption TEXT,
+  created_at TEXT NOT NULL,
+  FOREIGN KEY (health_log_id) REFERENCES health_logs(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 `;

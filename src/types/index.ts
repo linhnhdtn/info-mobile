@@ -110,3 +110,39 @@ export interface GoldHolding {
   buyPrice: number
   createdAt: string
 }
+
+export interface HealthLog {
+  id: string
+  date: string
+  weight: number | null
+  height: number | null
+  bloodPressureSys: number | null
+  bloodPressureDia: number | null
+  heartRate: number | null
+  sleepHours: number | null
+  waterMl: number | null
+  steps: number | null
+  exerciseMinutes: number | null
+  mood: string | null
+  note: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface HealthPhoto {
+  id: string
+  healthLogId: string
+  filePath: string
+  caption: string | null
+  createdAt: string
+}
+
+export const MOOD_OPTIONS = [
+  { label: "Tuyệt vời", value: "great", emoji: "\u{1F929}" },
+  { label: "Tốt", value: "good", emoji: "\u{1F60A}" },
+  { label: "Bình thường", value: "okay", emoji: "\u{1F610}" },
+  { label: "Không tốt", value: "bad", emoji: "\u{1F61E}" },
+  { label: "Rất tệ", value: "terrible", emoji: "\u{1F62D}" },
+] as const
+
+export type Mood = (typeof MOOD_OPTIONS)[number]["value"]
