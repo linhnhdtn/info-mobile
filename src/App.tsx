@@ -8,6 +8,7 @@ import ExpensesPage from './pages/ExpensesPage'
 import ExpensesOverviewPage from './pages/ExpensesOverviewPage'
 import WeatherPage from './pages/WeatherPage'
 import GoldPage from './pages/GoldPage'
+import HealthPage from './pages/HealthPage'
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/expenses" element={<ExpensesPage />} />
         <Route path="/expenses/overview" element={<ExpensesOverviewPage />} />
         <Route path="/gold" element={<GoldPage />} />
+        <Route path="/health" element={<HealthPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
